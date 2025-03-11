@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.d7757509.css",
-    "main.js": "/static/js/main.b879b1d9.js",
-    "index.html": "/index.html",
-    "main.d7757509.css.map": "/static/css/main.d7757509.css.map",
-    "main.b879b1d9.js.map": "/static/js/main.b879b1d9.js.map"
+    "main.css": "/hightfashionadmin/static/css/main.d7757509.css",
+    "main.js": "/hightfashionadmin/static/js/main.b879b1d9.js",
+    "index.html": "/hightfashionadmin/index.html",
+    "main.d7757509.css.map": "/hightfashionadmin/static/css/main.d7757509.css.map",
+    "main.b879b1d9.js.map": "/hightfashionadmin/static/js/main.b879b1d9.js.map"
   },
   "entrypoints": [
     "static/css/main.d7757509.css",
