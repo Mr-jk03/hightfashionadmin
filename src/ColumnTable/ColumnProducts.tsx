@@ -7,14 +7,6 @@ export const getColumnProducts = (
   handleSelectToEdit: (row: any) => void,
   handleDelete: (row: any) => void
 ): GridColDef[] => [
-  { field: "stt", headerName: "STT", width: 70 },
-  { field: "id", headerName: "ID", width: 170 },
-  { field: "category_name", headerName: "TÊN DANH MỤC", width: 270 },
-  { field: "product_name", headerName: "TÊN SẢN PHẨM", width: 500 },
-  { field: "description", headerName: "MÔ TẢ", width: 300 },
-  { field: "price", headerName: "GIÁ SẢN PHẨM", width: 150 },
-  { field: "stock_quantity", headerName: "SỐ LƯỢNG", width: 150 },
-  { field: "discount", headerName: "GIẢM GIÁ", width: 150 },
   {
     field: "actions",
     headerName: "HÀNH ĐỘNG",
@@ -33,4 +25,13 @@ export const getColumnProducts = (
       </div>
     ),
   },
+  { field: "id", headerName: "ID", width: 170 },
+  { field: "category_name", headerName: "TÊN DANH MỤC", width: 270 },
+  { field: "product_name", headerName: "TÊN SẢN PHẨM", width: 500 },
+  { field: "description", headerName: "MÔ TẢ", width: 300 },
+  { field: "price", headerName: "GIÁ SẢN PHẨM", width: 150 },
+  { field: "stock_quantity", headerName: "SỐ LƯỢNG", width: 150 },
+  { field: "discount", headerName: "GIẢM GIÁ", width: 150 },
+  { field: "color", headerName: "Màu sắc", width: 150 },
+  { field: "size", headerName: "Kích thước", width: 150 },
 ];

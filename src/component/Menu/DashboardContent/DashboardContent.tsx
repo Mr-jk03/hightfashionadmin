@@ -11,11 +11,15 @@ import { Receipt as ReceiptIcon } from "@phosphor-icons/react/dist/ssr/Receipt";
 import { CurrencyDollar as CurrencyDollarIcon } from "@phosphor-icons/react/dist/ssr/CurrencyDollar";
 import PersonIcon from "@mui/icons-material/Person";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
-import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { desktopOS, valueFormatter } from "./webUsageStats";
-import { getDataPieChar, getTotalCustomer } from "../../../config/apiFunction";
+import {
+  getDataLineChart,
+  getDataPieChar,
+  getTotalCustomer,
+} from "../../../config/apiFunction";
 import { toast } from "react-toastify";
+import { LineChart } from "@mui/x-charts";
+import moment from "moment";
 
 export interface TotalProfitProps {
   sx?: SxProps;
@@ -28,11 +32,24 @@ const DashboardContent = ({
 }: TotalProfitProps): React.JSX.Element => {
   const [totalCustomer, setTotalCustomer] = useState<number>(0);
   const [dataPieChart, setDataPieChart] = useState<any>([]);
+  const [dataPaySuccess, setDataPaySuccess] = useState<any>([]);
+  const [revenue, setRevenue] = useState(0);
+  const [totalOrder, setTotalOrder] = useState(0);
+  const [chartData, setChartData] = useState<{ x: string[]; y: number[] }>({
+    x: [],
+    y: [],
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getTotalCustomer();
-        setTotalCustomer(data.result);
+        if (data) {
+          setTotalCustomer(data.result);
+        } else {
+          toast.error("Lỗi APi lấy tổng số khách hàng!");
+        }
+
         const dataPie = await getDataPieChar();
         if (dataPie) {
           const format = dataPie?.data.map((o: any) => ({
@@ -50,6 +67,55 @@ const DashboardContent = ({
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const generateData = async () => {
+      try {
+        const res: any = await getDataLineChart();
+        if (res && res.data) {
+          const orders = res.data;
+
+          const paidOrders = orders.filter(
+            (order: any) => order.order_status === "paySuccess"
+          );
+          const totalPaid: any = paidOrders.reduce(
+            (sum: number, order: any) => sum + parseFloat(order.total_price),
+            0
+          );
+          setRevenue(totalPaid);
+          setTotalOrder(paidOrders.length);
+          const dailyTotal: Record<string, number> = {};
+          paidOrders.forEach((order: any) => {
+            const date = moment(order.created_at).format("YYYY-MM-DD");
+            const totalPrice = parseFloat(order.total_price);
+
+            if (!dailyTotal[date]) {
+              dailyTotal[date] = 0;
+            }
+            dailyTotal[date] += totalPrice;
+          });
+          const daysInMonth = moment().daysInMonth();
+          const currentMonth = moment().format("YYYY-MM");
+
+          const xAxisData: string[] = [];
+          const yAxisData: number[] = [];
+
+          for (let i = 1; i <= daysInMonth; i++) {
+            const date = `${currentMonth}-${String(i).padStart(2, "0")}`;
+            xAxisData.push(date);
+            yAxisData.push(dailyTotal[date] || 0);
+          }
+
+          setChartData({ x: xAxisData, y: yAxisData });
+        }
+      } catch (err: any) {
+        toast.error("Lỗi lấy dữ liệu biểu đồ");
+      }
+    };
+
+    generateData();
+  }, []);
+
   return (
     <div>
       <div className="row">
@@ -69,7 +135,14 @@ const DashboardContent = ({
                     <Typography color="text.secondary" variant="overline">
                       tổng doanh thu
                     </Typography>
-                    <Typography variant="h4">{value}</Typography>
+                    <Typography>
+                      <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                        {revenue.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </span>
+                    </Typography>
                   </Stack>
                   <Avatar
                     sx={{
@@ -100,7 +173,11 @@ const DashboardContent = ({
                   <Typography color="text.secondary" variant="overline">
                     Tổng Số đơn
                   </Typography>
-                  <Typography variant="h4">{value}</Typography>
+                  <Typography>
+                    <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      {totalOrder} đơn
+                    </span>
+                  </Typography>
                 </Stack>
                 <Avatar
                   sx={{
@@ -130,7 +207,11 @@ const DashboardContent = ({
                   <Typography color="text.secondary" variant="overline">
                     tổng khách hàng
                   </Typography>
-                  <Typography variant="h4">{totalCustomer}</Typography>
+                  <Typography>
+                    <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      {totalCustomer}
+                    </span>
+                  </Typography>
                 </Stack>
                 <Avatar
                   sx={{
@@ -160,7 +241,11 @@ const DashboardContent = ({
                   <Typography color="text.secondary" variant="overline">
                     kho
                   </Typography>
-                  <Typography variant="h4">{value}</Typography>
+                  <Typography>
+                    <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      abc
+                    </span>
+                  </Typography>
                 </Stack>
                 <Avatar
                   sx={{
@@ -179,17 +264,12 @@ const DashboardContent = ({
       <div className="row mt-3">
         <div className="col-8">
           <div className="box-chart">
-            <BarChart
-              xAxis={[
-                { scaleType: "band", data: ["group A", "group B", "group C"] },
-              ]}
-              series={[
-                { data: [4, 3, 5] },
-                { data: [1, 6, 3] },
-                { data: [2, 5, 6] },
-              ]}
-              width={800}
-              height={430}
+            <LineChart
+              margin={{ left: 70, right: 20 }}
+              xAxis={[{ scaleType: "point", data: chartData.x }]}
+              series={[{ data: chartData.y, label: "Doanh số" }]}
+              width={750}
+              height={500}
             />
           </div>
         </div>

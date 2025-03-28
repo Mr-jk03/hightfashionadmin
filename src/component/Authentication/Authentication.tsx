@@ -16,7 +16,7 @@ const Authentication = () => {
   const [passWord, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    if (!userName && !passWord) {
+    if (!userName || !passWord) {
       toast.warn("Vui lòng điền đầy đủ thông tin!");
       return;
     }
@@ -33,6 +33,12 @@ const Authentication = () => {
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Đã có lỗi xảy ra!";
       toast.error(errorMessage);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -55,6 +61,7 @@ const Authentication = () => {
                   <input
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     type="text"
                     className="form-control"
                     id="username"
@@ -65,6 +72,7 @@ const Authentication = () => {
                   <input
                     value={passWord}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     type="password"
                     className="form-control"
                     id="password"

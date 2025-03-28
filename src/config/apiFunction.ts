@@ -93,7 +93,9 @@ export const addProduct = async (
   description: string,
   price: string,
   stock_quantity: string,
-  discount: string
+  discount: string,
+  color: string[],
+  size: string[]  
 ) => {
   const res = await apiClient.post("/addProduct", {
     category_id,
@@ -103,9 +105,12 @@ export const addProduct = async (
     price,
     stock_quantity,
     discount,
+    color: JSON.stringify(color), 
+    size: JSON.stringify(size),
   });
-  return res.data;
+
 };
+
 
 export const GetListProducts = async () => {
   const res = await apiClient.get("/getListProducts");
@@ -119,7 +124,9 @@ export const updateProduct = async (
   description: string,
   price: string,
   stock_quantity: string,
-  discount: string
+  discount: string,
+  color: string[],
+  size: string[] 
 ) => {
   const res = await apiClient.patch("/updateProduct", {
     id,
@@ -130,6 +137,8 @@ export const updateProduct = async (
     price,
     stock_quantity,
     discount,
+    color: JSON.stringify(color), 
+    size: JSON.stringify(size),
   });
   return res.data;
 };
@@ -140,5 +149,10 @@ export const deleteProduct =async(id: string)=>{
 }
 export const getDataPieChar = async()=>{
   const res = await apiClient.get('/getdataPieChar')
+  return res.data
+}
+
+export const getDataLineChart = async()=>{
+  const res = await apiClient.get('/getDataDashboard')
   return res.data
 }

@@ -15,7 +15,7 @@ import { PageContainer } from "@toolpad/core/PageContainer";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import Grid from "@mui/material/Grid2";
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import Swal from "sweetalert2";
 import Categori from "./Categori";
 import Product from "./Product";
@@ -24,7 +24,8 @@ import { Button } from "@mui/material";
 import Customer from "./Customer";
 import Banner from "./Banner";
 import Discount from "./Discount";
-
+import Orders from "./Orders";
+import Revenue from "./Revenue";
 
 const handleLogOut = () => {
   Swal.fire({
@@ -35,12 +36,11 @@ const handleLogOut = () => {
     cancelButtonColor: "#3085d6",
     confirmButtonText: "Đăng xuất",
     cancelButtonText: "Hủy",
-  }).then((result)=>{
-    if(result.isConfirmed){
-      window.location.href="/"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/";
     }
-  })
-  ;
+  });
 };
 
 const NAVIGATION: Navigation = [
@@ -126,8 +126,12 @@ const NAVIGATION: Navigation = [
     kind: "divider",
   },
   {
-    icon: <LogoutIcon onClick={handleLogOut}/>,
-    action: <Button fullWidth onClick={handleLogOut}>ĐĂNG XUẤT</Button>,
+    icon: <LogoutIcon onClick={handleLogOut} />,
+    action: (
+      <Button fullWidth onClick={handleLogOut}>
+        ĐĂNG XUẤT
+      </Button>
+    ),
   },
 ];
 
@@ -177,9 +181,11 @@ const Dashboard = (props: any) => {
           {router.pathname === "/dashboard" && <DashboardContent value="abc" />}
           {router.pathname === "/categori" && <Categori />}
           {router.pathname === "/banner" && <Banner />}
-          {router.pathname === "/product" && <Product />} {/**--------------- */}
+          {router.pathname === "/product" && <Product />}
+          {router.pathname === "/order" && <Orders />}
           {router.pathname === "/customer" && <Customer />}
           {router.pathname === "/discount" && <Discount />}
+          {router.pathname === "/statistical/revenue" && <Revenue />}
         </PageContainer>
       </DashboardLayout>
     </AppProvider>

@@ -5,11 +5,15 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
   MenuItem,
   Paper,
   Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -28,8 +32,11 @@ import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { getColumnProducts } from "../../ColumnTable/ColumnProducts";
 import Swal from "sweetalert2";
+import { Box } from "@mui/system";
+import { colors, getStyles, MenuProps, sizes } from "./type";
 
 const Product = () => {
+  const theme = useTheme();
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [description, setDesCription] = useState("");
@@ -43,6 +50,8 @@ const Product = () => {
   const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [valueDiaLog, setValueDiaLog] = useState<any>([]);
+  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [size, setSize] = React.useState<string[]>([]);
   const [dataTable, setDataTable] = useState({
     data: [],
     totalRows: 0,
@@ -120,7 +129,7 @@ const Product = () => {
   };
 
   const handleAddProduct = async () => {
-    if (!category && !productName && !productPrice && !quantity) {
+    if (!category || !productName || !productPrice || !quantity) {
       toast.error("Vui lòng nhập đầy đủ thông tin");
     } else {
       try {
@@ -131,7 +140,9 @@ const Product = () => {
           description,
           productPrice,
           quantity,
-          discount
+          discount,
+          personName,
+          size
         );
         if (res) {
           toast.success("Thêm sản phẩm thành công !");
@@ -143,12 +154,15 @@ const Product = () => {
           setProductPrice("");
           setQuantity("");
           setDiscount("");
+          setPersonName([]);
+          setSize([]);
         }
       } catch (err: any) {
         toast.error("Lỗi thêm sản phẩm");
       }
     }
   };
+
   const handleClearAll = () => {
     setCategory("");
     setProductName("");
@@ -158,25 +172,49 @@ const Product = () => {
     setQuantity("");
     setDiscount("");
     setStatusBtn(false);
+    setPersonName([]);
+    setSize([]);
   };
 
   const handleSelectToEdit = (value: any) => {
     setStatusBtn(true);
+    console.log("object", value);
+
     const categoryName: any = selectCategory.find(
       (o: any) => o.id == value.category_id
     );
     const disCount: any = selectDiscount.find(
       (o: any) => o.discount_percentage == value.discount
     );
+
     setProductId(value.id);
-    setCategory(categoryName?.id);
-    setProductName(value.product_name);
-    setImage(value.product_image);
-    setDesCription(value.description);
-    setProductPrice(value.price);
-    setQuantity(value.stock_quantity);
-    setDiscount(disCount?.discount_percentage);
+    setCategory(categoryName?.id || null);
+    setProductName(value.product_name || "");
+    setImage(value.product_image || "");
+    setDesCription(value.description || "");
+    setProductPrice(value.price || 0);
+    setQuantity(value.stock_quantity || 0);
+    setDiscount(disCount?.discount_percentage || 0);
+
+    let parsedColor = [];
+    let parsedSize = [];
+
+    try {
+      parsedColor = value.color ? JSON.parse(value.color) : [];
+    } catch (error) {
+      console.error("Lỗi khi parse màu:", error);
+    }
+
+    try {
+      parsedSize = value.size ? JSON.parse(value.size) : [];
+    } catch (error) {
+      console.error("Lỗi khi parse kích thước:", error);
+    }
+
+    setPersonName(parsedColor);
+    setSize(parsedSize);
   };
+
   const handleEditProduct = () => {
     if (!category && !productName && !productPrice && !quantity) {
       toast.error("Vui lòng nhập đầy đủ thông tin");
@@ -190,7 +228,9 @@ const Product = () => {
           description,
           productPrice,
           quantity,
-          discount
+          discount,
+          personName,
+          size
         );
         if (res) {
           toast.success("Cập nhật sản phẩm thành công !");
@@ -203,6 +243,8 @@ const Product = () => {
           setProductPrice("");
           setQuantity("");
           setDiscount("");
+          setPersonName([]);
+          setSize([]); 
         }
       } catch (err: any) {
         toast.error("Lỗi cập nhật sản phẩm");
@@ -236,6 +278,24 @@ const Product = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleChangeSelectChip = (
+    event: SelectChangeEvent<typeof personName>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(typeof value === "string" ? value.split(",") : value);
+  };
+  const handleChangeSelectSizeChip = (
+    event: SelectChangeEvent<typeof personName>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setSize(typeof value === "string" ? value.split(",") : value);
+  };
+
   return (
     <div>
       <div className="row">
@@ -325,7 +385,7 @@ const Product = () => {
             size="small"
           />
         </div>
-        <div className="col-3 mt-2">
+        <div className="col-2 mt-2">
           <TextField
             id="stock_quantity"
             label="Số lượng"
@@ -335,6 +395,74 @@ const Product = () => {
             fullWidth
             size="small"
           />
+        </div>
+        <div className="col-3 ">
+          <FormControl sx={{ m: 1, width: "100%" }}>
+            <InputLabel id="color" size="small">
+              Màu
+            </InputLabel>
+            <Select
+              labelId="color"
+              id="color"
+              multiple
+              value={personName}
+              size="small"
+              onChange={handleChangeSelectChip}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {colors.map((color) => (
+                <MenuItem
+                  key={color}
+                  value={color}
+                  style={getStyles(color, personName, theme)}
+                >
+                  {color}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div className="col-2">
+          <FormControl sx={{ m: 1, width: "100%" }}>
+            <InputLabel id="size" size="small">
+              Size
+            </InputLabel>
+            <Select
+              labelId="size"
+              id="size"
+              multiple
+              value={size}
+              size="small"
+              onChange={handleChangeSelectSizeChip}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {sizes.map((sizes) => (
+                <MenuItem
+                  key={sizes}
+                  value={sizes}
+                  style={getStyles(sizes, personName, theme)}
+                >
+                  {sizes}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
         <div className="col-3 mt-2">
           <Select

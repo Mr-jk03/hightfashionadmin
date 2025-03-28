@@ -10,6 +10,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
+  /**"homepage": "https://mr-jk03.github.io/hightfashionadmin", */
   <Provider store={store}>
     <BrowserRouter>
       <App />
