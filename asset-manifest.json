@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/hightfashionadmin/static/css/main.d7757509.css",
-    "main.js": "/hightfashionadmin/static/js/main.c239cd0b.js",
-    "index.html": "/hightfashionadmin/index.html",
-    "main.d7757509.css.map": "/hightfashionadmin/static/css/main.d7757509.css.map",
-    "main.c239cd0b.js.map": "/hightfashionadmin/static/js/main.c239cd0b.js.map"
+    "main.css": "/static/css/main.648e5b14.css",
+    "main.js": "/static/js/main.7c0281a1.js",
+    "index.html": "/index.html",
+    "main.648e5b14.css.map": "/static/css/main.648e5b14.css.map",
+    "main.7c0281a1.js.map": "/static/js/main.7c0281a1.js.map"
   },
   "entrypoints": [
-    "static/css/main.d7757509.css",
-    "static/js/main.c239cd0b.js"
+    "static/css/main.648e5b14.css",
+    "static/js/main.7c0281a1.js"
   ]
 }
