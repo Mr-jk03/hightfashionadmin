@@ -280,3 +280,26 @@ h2 {
   justify-content: center;
   align-items: center;
 }
+
+.hoverAll {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  top: -30px;
+  right: 0;
+  height: 50px;
+  width: 220px;
+  background-color: #0d95e8;
+  z-index: 99;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.parentHoverAll:hover .hoverAll {
+  opacity: 1;
+  visibility: visible;
+}

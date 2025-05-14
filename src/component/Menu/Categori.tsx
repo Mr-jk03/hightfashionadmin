@@ -33,6 +33,7 @@ const Categori = () => {
   });
   const [categoryId, setCategoryId] = useState("");
   const [categoryName, setCategoryName] = useState("");
+  const [brandName, setBrandName] = useState("");
   const [description, setDesCription] = useState("");
   const [statusBtn, setStatusBtn] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -67,8 +68,9 @@ const Categori = () => {
       toast.warning("Vui lòng điền tên danh mục");
     } else {
       try {
-        await addCategory(categoryName, description);
+        await addCategory(categoryName, brandName, description);
         setCategoryName("");
+        setBrandName("");
         setDesCription("");
         toast.success("Thêm danh mục thành công!");
         setRefresh((prev) => !prev);
@@ -86,11 +88,12 @@ const Categori = () => {
   };
   const handleEditcategory = async () => {
     try {
-      await updateCategory(categoryName, description, categoryId);
+      await updateCategory(categoryName, brandName, description, categoryId);
       toast.success("Cập nhật danh mục thành công");
       setRefresh((prev) => !prev);
       setStatusBtn(false);
       setCategoryName("");
+      setBrandName("");
       setDesCription("");
     } catch (error: any) {
       toast.error(error.response?.data?.message);
@@ -98,6 +101,7 @@ const Categori = () => {
   };
   const handleClearAll = () => {
     setCategoryName("");
+    setBrandName("");
     setDesCription("");
     setStatusBtn(false);
   };
@@ -118,8 +122,8 @@ const Categori = () => {
         if (res) {
           toast.success("Xóa danh mục thành công");
           setRefresh((prev) => !prev);
-        }else{
-          toast.error('Lỗi khi xóa danh mục!')
+        } else {
+          toast.error("Lỗi khi xóa danh mục!");
         }
       } catch (error: any) {
         toast.error(error.response);
@@ -140,6 +144,17 @@ const Categori = () => {
             fullWidth
             size="small"
             inputRef={categoryInputForcus}
+          />
+          <TextField
+            id="brand"
+            label="Nhà cung cấp"
+            defaultValue=""
+            value={brandName}
+            onChange={(e) => setBrandName(e.target.value)}
+            fullWidth
+            size="small"
+            inputRef={categoryInputForcus}
+            sx={{ marginTop: "7px" }}
           />
         </div>
         <div className="col-6">
@@ -196,6 +211,7 @@ const Categori = () => {
             sx={{ border: 0 }}
             paginationMode="client"
             onPaginationModelChange={setPaginationModel}
+            columnVisibilityModel={{ id: false }}
           />
         </Paper>
       </div>

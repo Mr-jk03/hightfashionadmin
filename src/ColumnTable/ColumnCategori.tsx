@@ -9,7 +9,8 @@ export const ColumnCategori = (
 ): GridColDef[] => [
   { field: "stt", headerName: "STT", width: 70 },
   { field: "id", headerName: "ID", width: 170 },
-  { field: "category_name", headerName: "TÊN DANH MỤC", width: 300 },
+  { field: "category_name", headerName: "TÊN DANH MỤC", width: 250 },
+  { field: "brand", headerName: "NHÀ CUNG CẤP", width: 150 },
   { field: "description", headerName: "MÔ TẢ", width: 500 },
   {
     field: "actions",

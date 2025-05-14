@@ -12,10 +12,12 @@ export const getTotalCustomer = async () => {
 
 export const addCategory = async (
   category_name: string,
+  brand: string,
   description: string
 ) => {
   const res = await apiClient.post("/addCategory", {
     category_name,
+    brand,
     description,
   });
   return res.data;
@@ -30,11 +32,13 @@ export const deleteCategory = async (id: string) => {
 };
 export const updateCategory = async (
   category_name: string,
+  brand: string,
   description: string,
   id: string
 ) => {
   const res = await apiClient.patch("/updateCategory", {
     category_name,
+    brand,
     description,
     id,
   });
@@ -58,10 +62,10 @@ export const addBanner = async (link_banner: string) => {
   const res = await apiClient.post("/addBanner", { link_banner });
   return res.data;
 };
-export const deleteBanner = async (id: any)=>{
-    const res = await apiClient.delete(`/deleteBanner?id=${id}`)
-    return res.data
-}
+export const deleteBanner = async (id: any) => {
+  const res = await apiClient.delete(`/deleteBanner?id=${id}`);
+  return res.data;
+};
 
 export const getListDiscount = async () => {
   const res = await apiClient.get("/getListDiscount");
@@ -95,7 +99,7 @@ export const addProduct = async (
   stock_quantity: string,
   discount: string,
   color: string[],
-  size: string[]  
+  size: string[]
 ) => {
   const res = await apiClient.post("/addProduct", {
     category_id,
@@ -105,12 +109,10 @@ export const addProduct = async (
     price,
     stock_quantity,
     discount,
-    color: JSON.stringify(color), 
+    color: JSON.stringify(color),
     size: JSON.stringify(size),
   });
-
 };
-
 
 export const GetListProducts = async () => {
   const res = await apiClient.get("/getListProducts");
@@ -126,7 +128,7 @@ export const updateProduct = async (
   stock_quantity: string,
   discount: string,
   color: string[],
-  size: string[] 
+  size: string[]
 ) => {
   const res = await apiClient.patch("/updateProduct", {
     id,
@@ -137,22 +139,55 @@ export const updateProduct = async (
     price,
     stock_quantity,
     discount,
-    color: JSON.stringify(color), 
+    color: JSON.stringify(color),
     size: JSON.stringify(size),
   });
   return res.data;
 };
 
-export const deleteProduct =async(id: string)=>{
-    const res = await apiClient.delete(`/deleteProduct?id=${id}`)
-    return res.data
-}
-export const getDataPieChar = async()=>{
-  const res = await apiClient.get('/getdataPieChar')
-  return res.data
-}
+export const deleteProduct = async (id: string) => {
+  const res = await apiClient.delete(`/deleteProduct?id=${id}`);
+  return res.data;
+};
+export const getDataPieChar = async () => {
+  const res = await apiClient.get("/getdataPieChar");
+  return res.data;
+};
 
-export const getDataLineChart = async()=>{
-  const res = await apiClient.get('/getDataDashboard')
-  return res.data
-}
+export const getDataLineChart = async () => {
+  const res = await apiClient.get("/getDataDashboard");
+  return res.data;
+};
+
+export const getListInventory = async () => {
+  const res = await apiClient.get("/getListInventory");
+  return res.data;
+};
+export const addPrdToStock = async (data: any) => {
+  const res = await apiClient.post("/addPrdtoStock", {
+    dateofentry: data.dateofentry,
+    brandname: data.brandname,
+    product_name: data.product_name,
+    stock_quantity: data.stock_quantity,
+    import_price: data.import_price,
+    unit: data.unit,
+    total_price: data.total_price,
+    color: JSON.stringify(data.color),
+    size: JSON.stringify(data.size),
+    note: data?.note,
+  });
+  return res.data;
+};
+
+export const deletePrdInStock = async (id: any) => {
+  const res = await apiClient.delete(`/deletePrdInStock?id=${id}`);
+  return res.data;
+};
+
+export const updateOrderStatus = async (order_status: any, id: number) => {
+  const res = await apiClient.put("/updateStatusOrder", {
+    order_status,
+    id,
+  });
+  return res.data;
+};

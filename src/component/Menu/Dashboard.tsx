@@ -26,6 +26,7 @@ import Banner from "./Banner";
 import Discount from "./Discount";
 import Orders from "./Orders";
 import Revenue from "./Revenue";
+import Inventory from "./Inventory";
 
 const handleLogOut = () => {
   Swal.fire({
@@ -101,21 +102,11 @@ const NAVIGATION: Navigation = [
         icon: <LeaderboardIcon />,
       },
       {
-        segment: "numberoforder",
-        title: "SỐ LƯỢNG ĐƠN HÀNG",
-        icon: <DescriptionIcon />,
-      },
-      {
         segment: "bestsaler",
         title: "SL SẢN PHẨM BÁN CHẠY",
         icon: <DescriptionIcon />,
       },
     ],
-  },
-  {
-    segment: "promotion",
-    title: "KHUYẾN MÃI",
-    icon: <ReceiptIcon />,
   },
   {
     segment: "warehouse",
@@ -177,7 +168,11 @@ const Dashboard = (props: any) => {
       branding={{ title: "HIGH FASHION !" }}
     >
       <DashboardLayout>
-        <PageContainer title="" breadcrumbs={[]}>
+        <PageContainer
+          title=""
+          breadcrumbs={[]}
+          sx={{ maxWidth: "none !important", width: "100%" }}
+        >
           {router.pathname === "/dashboard" && <DashboardContent value="abc" />}
           {router.pathname === "/categori" && <Categori />}
           {router.pathname === "/banner" && <Banner />}
@@ -186,6 +181,7 @@ const Dashboard = (props: any) => {
           {router.pathname === "/customer" && <Customer />}
           {router.pathname === "/discount" && <Discount />}
           {router.pathname === "/statistical/revenue" && <Revenue />}
+          {router.pathname === "/warehouse" && <Inventory />}
         </PageContainer>
       </DashboardLayout>
     </AppProvider>

@@ -75,15 +75,20 @@ const DashboardContent = ({
         if (res && res.data) {
           const orders = res.data;
 
+          const validStatuses = ["paySuccess", "delivered"];
           const paidOrders = orders.filter(
             (order: any) => order.order_status === "paySuccess"
           );
-          const totalPaid: any = paidOrders.reduce(
-            (sum: number, order: any) => sum + parseFloat(order.total_price),
+
+          const paidAndDeliveredOrders = orders.filter((order: any) =>
+            validStatuses.includes(order.order_status)
+          );
+          const totalPaidAndDeliveredOrders = paidAndDeliveredOrders.reduce(
+            (acc: any, curr: any) => acc + curr.total_price,
             0
           );
-          setRevenue(totalPaid);
-          setTotalOrder(paidOrders.length);
+          setRevenue(totalPaidAndDeliveredOrders);
+          setTotalOrder(res.data.length);
           const dailyTotal: Record<string, number> = {};
           paidOrders.forEach((order: any) => {
             const date = moment(order.created_at).format("YYYY-MM-DD");
@@ -133,7 +138,7 @@ const DashboardContent = ({
                 >
                   <Stack spacing={1}>
                     <Typography color="text.secondary" variant="overline">
-                      tổng doanh thu
+                      doanh thu
                     </Typography>
                     <Typography>
                       <span style={{ fontSize: "20px", fontWeight: "bold" }}>

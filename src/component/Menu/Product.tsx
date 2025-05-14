@@ -178,7 +178,6 @@ const Product = () => {
 
   const handleSelectToEdit = (value: any) => {
     setStatusBtn(true);
-    console.log("object", value);
 
     const categoryName: any = selectCategory.find(
       (o: any) => o.id == value.category_id
@@ -244,7 +243,7 @@ const Product = () => {
           setQuantity("");
           setDiscount("");
           setPersonName([]);
-          setSize([]); 
+          setSize([]);
         }
       } catch (err: any) {
         toast.error("Lỗi cập nhật sản phẩm");
@@ -529,6 +528,7 @@ const Product = () => {
             paginationMode="client"
             onPaginationModelChange={setPaginationModel}
             onCellDoubleClick={handleClicked}
+            columnVisibilityModel={{ id: false }}
           />
         </Paper>
       </div>

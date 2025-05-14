@@ -20,6 +20,7 @@ const Customer = () => {
   const [phoneUser, setPhoneUser] = useState("");
   const [emaiUser, setEmailUser] = useState("");
   const [addressUser, setAddressUser] = useState("");
+  const [avataCus, setAvataCus] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -66,10 +67,12 @@ const Customer = () => {
   const handleViewUser = (row: any) => {
     setIdUser(row?.id);
     setNameUser(row?.full_name);
+    setAvataCus(row?.avata)
     setPhoneUser(row?.phone);
     setEmailUser(row?.email);
     setAddressUser(row?.address);
   };
+  console.log('object', avataCus)
   const handleClearAll = () => {
     setIdUser("");
     setNameUser("");
@@ -91,7 +94,8 @@ const Customer = () => {
         >
           <img
             style={{ height: "100%", width: "100%" }}
-            src="https://plus.unsplash.com/premium_photo-1689708721750-8a0e6dc14cee?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bWFuJTIwYXZhdGFyfGVufDB8fDB8fHww"
+            src={avataCus}
+            alt="avata khách hàng"
           />
         </div>
       </div>

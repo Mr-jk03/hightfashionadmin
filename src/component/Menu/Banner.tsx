@@ -83,7 +83,6 @@ const Banner = () => {
     }
   };
   const handleShowBannerImage = (value: any) => {
-    console.log("object", value);
     setOpen(true);
     setValueBannerImage(value.row.link_banner);
   };
@@ -126,6 +125,7 @@ const Banner = () => {
             //onRowSelectionModelChange={handleSelectRow}
             sx={{ border: 0 }}
             onCellDoubleClick={handleShowBannerImage}
+            columnVisibilityModel={{id: false}}
           />
         </Paper>
       </div>

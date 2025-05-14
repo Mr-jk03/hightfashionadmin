@@ -8,12 +8,12 @@ export const ColumnBanner = (
 ): GridColDef[] => [
   { field: "stt", headerName: "STT", width: 70 },
   { field: "id", headerName: "ID", width: 170 },
-  { field: "link_banner", headerName: "LINK BANNER", width: 780 },
+  { field: "link_banner", headerName: "LINK BANNER", width: 780, flex: 1 },
   {
     field: "actions",
     headerName: "HÀNH ĐỘNG",
     width: 110,
-    align:'center',
+    align: "center",
     renderCell: (params: any) => (
       <div>
         <IconButton color="secondary" onClick={() => handleDelete(params.row)}>

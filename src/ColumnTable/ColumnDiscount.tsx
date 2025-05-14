@@ -2,6 +2,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+import moment from "moment";
 
 export const getColumnDiscount = (
   handleDelete: (row: any) => void
@@ -10,13 +11,31 @@ export const getColumnDiscount = (
   { field: "id", headerName: "ID", width: 170 },
   { field: "discount_code", headerName: "MÃ GIẢM GIÁ", width: 220 },
   { field: "discount_percentage", headerName: "% GIẢM GIÁ", width: 180 },
-  { field: "valid_from", headerName: "THỜI GIAN BẮT ĐẦU", width: 200 },
-  { field: "valid_until", headerName: "THỜI GIAN KẾT THÚC", width: 200 },
+  {
+    field: "valid_from",
+    headerName: "THỜI GIAN BẮT ĐẦU",
+    width: 200,
+    valueFormatter: (params) => {
+      return moment(params, "HH:mm:ss YYYY/MM/DD").format(
+        "DD/MM/YYYY HH:mm:ss"
+      );
+    },
+  },
+  {
+    field: "valid_until",
+    headerName: "THỜI GIAN KẾT THÚC",
+    width: 200,
+    valueFormatter: (params) => {
+      return moment(params, "HH:mm:ss YYYY/MM/DD").format(
+        "DD/MM/YYYY HH:mm:ss"
+      );
+    },
+  },
   {
     field: "actions",
     headerName: "HÀNH ĐỘNG",
     width: 110,
-    align: 'center',
+    align: "center",
     renderCell: (params: any) => (
       <div>
         <IconButton color="secondary" onClick={() => handleDelete(params.row)}>
