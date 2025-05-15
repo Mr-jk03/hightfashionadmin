@@ -20,7 +20,7 @@ export interface ListStateModel extends Array<StateModel> {}
 
 export interface AuthenticationModel{
     userName?: string,
-    passWord?: string,
+    role?: string,
 }
 
 export interface CategoryModal{

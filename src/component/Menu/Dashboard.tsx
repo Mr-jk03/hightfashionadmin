@@ -27,6 +27,8 @@ import Discount from "./Discount";
 import Orders from "./Orders";
 import Revenue from "./Revenue";
 import Inventory from "./Inventory";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 const handleLogOut = () => {
   Swal.fire({
@@ -44,39 +46,16 @@ const handleLogOut = () => {
   });
 };
 
-const NAVIGATION: Navigation = [
-  {
-    kind: "header",
-    title: "Main items",
-  },
-  {
-    segment: "dashboard",
-    title: "DASHBOARD",
-    icon: <DashboardIcon />,
-  },
-  {
-    segment: "categori",
-    title: "QUẢN LÍ DANH MỤC",
-    icon: <CategoryIcon />,
-  },
-  {
-    segment: "banner",
-    title: "BANNER",
-    icon: <CategoryIcon />,
-  },
-  {
-    segment: "product",
-    title: "QUẢN LÍ SẢN PHẨM",
-    icon: <InventoryIcon />,
-  },
-  {
-    segment: "order",
-    title: "QUẢN LÍ ĐƠN HÀNG",
-    icon: <ShoppingCartIcon />,
-  },
+const NAVIGATION_ADMIN: Navigation = [
+  { kind: "header", title: "Main items" },
+  { segment: "dashboard", title: "DASHBOARD", icon: <DashboardIcon /> },
+  { segment: "categori", title: "QUẢN LÍ DANH MỤC", icon: <CategoryIcon /> },
+  { segment: "banner", title: "BANNER", icon: <CategoryIcon /> },
+  { segment: "product", title: "QUẢN LÍ SẢN PHẨM", icon: <InventoryIcon /> },
+  { segment: "order", title: "QUẢN LÍ ĐƠN HÀNG", icon: <ShoppingCartIcon /> },
   {
     segment: "customer",
-    title: "QUẢN LÍ KHÁCH HÀNG",
+    title: "QL KHÁCH HÀNG/NHÂN VIÊN",
     icon: <PersonIcon />,
   },
   {
@@ -84,13 +63,8 @@ const NAVIGATION: Navigation = [
     title: "TẠO KHUYẾN MÃI",
     icon: <ConfirmationNumberIcon />,
   },
-  {
-    kind: "divider",
-  },
-  {
-    kind: "header",
-    title: "Analytics",
-  },
+  { kind: "divider" },
+  { kind: "header", title: "Analytics" },
   {
     segment: "statistical",
     title: "THỐNG KÊ",
@@ -108,14 +82,22 @@ const NAVIGATION: Navigation = [
       },
     ],
   },
+  { segment: "warehouse", title: "KHO", icon: <WarehouseIcon /> },
+  { kind: "divider" },
   {
-    segment: "warehouse",
-    title: "KHO",
-    icon: <WarehouseIcon />,
+    icon: <LogoutIcon onClick={handleLogOut} />,
+    action: (
+      <Button fullWidth onClick={handleLogOut}>
+        ĐĂNG XUẤT
+      </Button>
+    ),
   },
-  {
-    kind: "divider",
-  },
+];
+
+const NAVIGATION_WAREHOUSE: Navigation = [
+  { kind: "header", title: "Kho" },
+  { segment: "warehouse", title: "KHO", icon: <WarehouseIcon /> },
+  { kind: "divider" },
   {
     icon: <LogoutIcon onClick={handleLogOut} />,
     action: (
@@ -155,13 +137,17 @@ function useDemoRouter(initialPath: string): Router {
 }
 
 const Dashboard = (props: any) => {
+  const roleUser = JSON.parse(localStorage.getItem('viewUser') || '{}');
+
+  const navigation =
+    roleUser?.role === "admin" ? NAVIGATION_ADMIN : NAVIGATION_WAREHOUSE;
   const { window } = props;
   const router = useDemoRouter("/dashboard");
   const demoWindow = window ? window() : undefined;
 
   return (
     <AppProvider
-      navigation={NAVIGATION}
+      navigation={navigation}
       router={router}
       theme={demoTheme}
       window={demoWindow}

@@ -34,6 +34,7 @@ import { getColumnProducts } from "../../ColumnTable/ColumnProducts";
 import Swal from "sweetalert2";
 import { Box } from "@mui/system";
 import { colors, getStyles, MenuProps, sizes } from "./type";
+import { formatter } from "../../helps/Helps";
 
 const Product = () => {
   const theme = useTheme();
@@ -52,6 +53,7 @@ const Product = () => {
   const [valueDiaLog, setValueDiaLog] = useState<any>([]);
   const [personName, setPersonName] = React.useState<string[]>([]);
   const [size, setSize] = React.useState<string[]>([]);
+
   const [dataTable, setDataTable] = useState({
     data: [],
     totalRows: 0,
@@ -123,13 +125,19 @@ const Product = () => {
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Ngăn xuống dòng
-      setImage((prev) => prev + (prev ? ",\n" : "") + event.target.value);
+      event.preventDefault();
+      setImage((prev: string) => {
+        const trimmed = prev.trimEnd();
+        if (trimmed.endsWith(",")) {
+          return prev + "\n";
+        }
+        return trimmed + ",\n";
+      });
     }
   };
 
   const handleAddProduct = async () => {
-    if (!category || !productName || !productPrice || !quantity) {
+    if (!category || !productName || !productPrice) {
       toast.error("Vui lòng nhập đầy đủ thông tin");
     } else {
       try {
@@ -139,7 +147,7 @@ const Product = () => {
           image,
           description,
           productPrice,
-          quantity,
+          "0",
           discount,
           personName,
           size
@@ -295,6 +303,14 @@ const Product = () => {
     setSize(typeof value === "string" ? value.split(",") : value);
   };
 
+  const [file, setFile] = useState<File | null>(null);
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files) {
+  //     setFile(event.target.files[0]);
+  //   }
+  // };
+  // console.log('object', file)
+
   return (
     <div>
       <div className="row">
@@ -330,7 +346,7 @@ const Product = () => {
             size="small"
           />
         </div>
-        <div className="col-2 mt-2">
+        {/* <div className="col-2 mt-2">
           <input
             accept="image/*"
             style={{ display: "none" }}
@@ -343,7 +359,7 @@ const Product = () => {
               Chọn ảnh
             </Button>
           </label>
-        </div>
+        </div> */}
         <div className="col-6 mt-2">
           <TextField
             id="product_image"
@@ -377,14 +393,16 @@ const Product = () => {
           <TextField
             id="price"
             label="Giá"
-            defaultValue=""
-            value={productPrice}
-            onChange={(e) => setProductPrice(e.target.value)}
+            value={productPrice ? formatter(Number(productPrice)) : ""}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/\D/g, "");
+              setProductPrice(raw);
+            }}
             fullWidth
             size="small"
           />
         </div>
-        <div className="col-2 mt-2">
+        {/* <div className="col-2 mt-2">
           <TextField
             id="stock_quantity"
             label="Số lượng"
@@ -394,7 +412,7 @@ const Product = () => {
             fullWidth
             size="small"
           />
-        </div>
+        </div> */}
         <div className="col-3 ">
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="color" size="small">

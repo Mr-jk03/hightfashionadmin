@@ -2,7 +2,7 @@ import { AuthenticationModel, CategoryModal, ListStateModel } from "./EIgrid";
 
 export const formAuthentication: AuthenticationModel = {
     userName: undefined,
-    passWord: undefined
+    role: undefined
 }
 export const formCategory: CategoryModal={
   id: null,

@@ -4,7 +4,7 @@ export interface ADDADMIN {
 }
 export interface AUTHENTICATION {
   userName?: string | null;
-  passWord?: string | null;
+  role?: string | null;
 }
 
 export interface ADDCATEGORY {

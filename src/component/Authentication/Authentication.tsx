@@ -21,15 +21,16 @@ const Authentication = () => {
       return;
     }
     try {
-      await Login(userName, passWord);
-      toast.success("Đăng nhập thành công!");
-      dispatch(
-        auth.action.auThen({
-          userName: userName,
-          passWord: passWord,
-        })
-      );
-      navigate("/dashboard");
+      const res: any = await Login(userName, passWord);
+      if (res) {
+        toast.success("Đăng nhập thành công!");
+        const data = {
+          userName: res.data.email,
+          role: res.data.role,
+        };
+        localStorage.setItem("viewUser", JSON.stringify(data));
+        navigate("/dashboard");
+      }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Đã có lỗi xảy ra!";
       toast.error(errorMessage);

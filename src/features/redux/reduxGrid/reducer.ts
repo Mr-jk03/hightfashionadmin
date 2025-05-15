@@ -15,7 +15,7 @@ export const fashionReducer =  (state = InitialState, action:ActionTypes )=> {
             const adminAuth = newState[0]
             if(adminAuth){
                 newState[0].form.formData.formAuthentication.userName = action.payload.userName
-                newState[0].form.formData.formAuthentication.passWord = action.payload.passWord
+                newState[0].form.formData.formAuthentication.role = action.payload.role
             }
             return newState
         case 'ADDCATEGORY':

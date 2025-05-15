@@ -191,3 +191,19 @@ export const updateOrderStatus = async (order_status: any, id: number) => {
   });
   return res.data;
 };
+
+export const getListStaffwarehouse = async () => {
+  const res = await apiClient.get("/getListwarehouse");
+  return res.data;
+};
+export const addStaffwareHouse = async (data: any) => {
+  const res = await apiClient.post("/addNewUser", {
+    full_name: data.staffName,
+    email: data.staffEmail,
+    password: data.staffPass,
+    phone: data.staffMobile,
+    address: data.staffAddress,
+    role: data.staffRole,
+  });
+  return res.data;
+};

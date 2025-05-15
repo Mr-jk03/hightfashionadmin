@@ -174,3 +174,20 @@ export const initPriceStatusOrder: TotalPriceStatusOrder = {
   shipper: 0,
   success: 0,
 };
+
+export interface valueInfoStaff {
+  staffName: string;
+  staffMobile: string;
+  staffEmail: string;
+  staffPass: string;
+  staffAddress: string;
+  staffRole: string;
+}
+export const initValueStaff: valueInfoStaff = {
+  staffName: "",
+  staffMobile: "",
+  staffEmail: "",
+  staffPass: "",
+  staffAddress: "",
+  staffRole: "",
+};

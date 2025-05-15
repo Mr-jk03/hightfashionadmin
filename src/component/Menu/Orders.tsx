@@ -299,7 +299,6 @@ const Orders = () => {
   }, [refresh]);
 
   useEffect(() => {
-    const all = originalData.reduce((acc, curr) => acc + curr.total_price, 0);
     const pending = originalData
       .filter((item: any) => item.order_status == "pending")
       .reduce((acc, curr) => acc + curr.total_price, 0);
@@ -312,6 +311,7 @@ const Orders = () => {
     const success = originalData
       .filter((item: any) => item.order_status == "delivered")
       .reduce((acc, curr) => acc + curr.total_price, 0);
+    const all = pending + payed + shipper + success;
     setTotalPriceStatusOrder((prev: any) => ({
       ...prev,
       all: all,
@@ -321,7 +321,7 @@ const Orders = () => {
       success: success,
     }));
   }, [originalData]);
-  console.log("object", totalPriceStatusOrder);
+
   return (
     <div>
       <div className="row" style={{ height: "70px" }}>
@@ -354,7 +354,7 @@ const Orders = () => {
                   color: "GrayText",
                 }}
               >
-                Tổng số đơn hàng
+                Tổng số đơn
               </h6>
               <span
                 style={{
@@ -470,7 +470,7 @@ const Orders = () => {
                   color: "GrayText",
                 }}
               >
-                Số đơn đã thanh toán
+                đã thanh toán
               </h6>
               <span
                 style={{
@@ -764,25 +764,36 @@ const Orders = () => {
                     Hình thức thanh toán:{" "}
                   </span>
                   <br />
-                  <span>{dataSelectedOrder?.payment_method}</span>
+                  <span>
+                    {dataSelectedOrder?.payment_method == 1
+                      ? "Thanh toán qua VnPay"
+                      : "Thay toán khi nhận hàng"}
+                  </span>
                 </div>
               </div>
               <div className="col-4">
                 <span style={{ fontSize: "15px" }}>
-                  Trạng thái: {dataSelectedOrder?.order_status}
+                  Trạng thái:{" "}
+                  {dataSelectedOrder?.order_status
+                    ? selectOrdetStatus.find(
+                        (item: any) =>
+                          item.value === dataSelectedOrder.order_status
+                      )?.label
+                    : ""}
                 </span>
               </div>
             </div>
             <div className="row mt-3">
               <Select
+                label="Trạng thái"
                 labelId="category-label"
                 id="demo-customized-select"
-                value={dataSelectedOrder?.order_status}
                 onChange={handleChangeOrderStatus}
                 size="small"
                 fullWidth
                 displayEmpty
-                input={<OutlinedInput label="Tag" />}
+                input={<OutlinedInput label="Trạng thái" />}
+                defaultValue={dataSelectedOrder?.order_status}
               >
                 <MenuItem value="" disabled>
                   Chọn trạng thái
