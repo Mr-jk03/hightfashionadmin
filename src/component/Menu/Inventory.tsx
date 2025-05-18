@@ -25,6 +25,7 @@ import {
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { data } from "react-router-dom";
 
 const Inventory = () => {
   const theme = useTheme();
@@ -42,6 +43,7 @@ const Inventory = () => {
   const [note, setNote] = useState("");
   const [productId, setProductId] = useState("");
   const [selectProductId, setSelectProductId] = useState([]);
+
   const handleChangeSelectChip = (
     event: SelectChangeEvent<typeof colorName>
   ) => {
@@ -117,22 +119,61 @@ const Inventory = () => {
       }
     }
   };
-  useEffect(() => {
-    const getDataTable = async () => {
-      try {
-        const res: any = await getListInventory();
-        if (res) {
-          setDataTable(res.data);
-        } else {
-          toast.error("Lỗi khi lấy danh sách nhập hàng!");
-        }
-      } catch (err: any) {
-        toast.error("Lỗi liên quan đến network");
-      }
-    };
-    getDataTable();
-  }, []);
 
+  const handleAddPrdToStock = async () => {
+    try {
+      if (
+        dateofentry &&
+        brandName &&
+        nameProduct &&
+        stock_quantity &&
+        importPrice &&
+        unit &&
+        total_price &&
+        colorName &&
+        size
+      ) {
+        let obj = {
+          dateofentry: moment(dateofentry).format("YYYY-MM-DD"),
+          brandname: brandName,
+          productId: productId,
+          product_name: nameProduct,
+          stock_quantity: stock_quantity,
+          import_price: importPrice,
+          unit: unit,
+          total_price: total_price,
+          color: colorName,
+          size: size,
+          note: note,
+        };
+
+        const res: any = await addPrdToStock(obj);
+        if (res) {
+          toast.success("Nhập thành công!");
+          setRefresh((prev) => !prev);
+          setDateOfEnTry("");
+          setBrandName("");
+          setNameProduct("");
+          setStock_quantity(0);
+          setImportPrice(0);
+          setTotal_price(0);
+          setUnit("");
+          setNote("");
+          setColorName([]);
+          setSize([]);
+        } else {
+          toast.error("Nhập thất bại !");
+        }
+      } else {
+        toast.error("Vui lòng điền đầy đủ thông tin còn thiếu !");
+      }
+    } catch (err: any) {
+      toast.error("Lỗi liên quan đến network !");
+    }
+  };
+  const handleChange = (event: SelectChangeEvent) => {
+    setProductId(event.target.value as string);
+  };
   useEffect(() => {
     const getListProduct = async () => {
       try {
@@ -160,57 +201,50 @@ const Inventory = () => {
     };
     getListProduct();
   }, []);
-
-  const handleAddPrdToStock = async () => {
-    try {
-      if (
-        dateofentry &&
-        brandName &&
-        nameProduct &&
-        stock_quantity &&
-        importPrice &&
-        unit &&
-        total_price &&
-        colorName &&
-        size
-      ) {
-        let obj = {
-          dateofentry: moment(dateofentry).format("YYYY-MM-DD"),
-          brandname: brandName,
-          product_name: nameProduct,
-          stock_quantity: stock_quantity,
-          import_price: importPrice,
-          unit: unit,
-          total_price: total_price,
-          color: colorName,
-          size: size,
-          note: note,
-        };
-        const res: any = await addPrdToStock(obj);
+  useEffect(() => {
+    const getDataTable = async () => {
+      try {
+        const res: any = await getListInventory();
         if (res) {
-          toast.success("Nhập thành công!");
-          setRefresh((prev) => !prev);
-          setDateOfEnTry("");
-          setBrandName("");
-          setNameProduct("");
-          setStock_quantity(0);
-          setImportPrice(0);
-          setTotal_price(0);
-          setUnit("");
-          setNote("");
-          setColorName([]);
-          setSize([]);
+          setDataTable(res.data);
         } else {
-          toast.error("Nhập thất bại !");
+          toast.error("Lỗi khi lấy danh sách nhập hàng!");
         }
+      } catch (err: any) {
+        toast.error("Lỗi liên quan đến network");
       }
-    } catch (err: any) {
-      toast.error("Lỗi liên quan đến network !");
+    };
+    getDataTable();
+  }, []);
+  useEffect(() => {
+    if (productId) {
+      const dataObj: any = selectProductId.find(
+        (item: any) => item.id == productId
+      );
+      if (dataObj) {
+        let parsedColor = [];
+        let parsedSize = [];
+
+        try {
+          parsedColor = dataObj.color ? JSON.parse(dataObj.color) : [];
+        } catch (error) {
+          console.error("Lỗi khi parse màu:", error);
+        }
+
+        try {
+          parsedSize = dataObj.size ? JSON.parse(dataObj.size) : [];
+        } catch (error) {
+          console.error("Lỗi khi parse kích thước:", error);
+        }
+
+        setBrandName(dataObj?.brand);
+        setNameProduct(dataObj?.product_name);
+        setStock_quantity(dataObj?.stock_quantity);
+        setColorName(parsedColor);
+        setSize(parsedSize);
+      }
     }
-  };
-  const handleChange = (event: SelectChangeEvent) => {
-    setProductId(event.target.value as string);
-  };
+  }, [productId]);
   return (
     <div>
       <div className="row">
@@ -244,7 +278,7 @@ const Inventory = () => {
             <Select
               labelId="product_id"
               id="product_id"
-              value={productId}
+              value={productId ? productId : ""}
               label="Age"
               onChange={handleChange}
             >

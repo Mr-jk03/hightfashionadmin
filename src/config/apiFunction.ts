@@ -167,6 +167,7 @@ export const addPrdToStock = async (data: any) => {
   const res = await apiClient.post("/addPrdtoStock", {
     dateofentry: data.dateofentry,
     brandname: data.brandname,
+    product_id: data.productId,
     product_name: data.product_name,
     stock_quantity: data.stock_quantity,
     import_price: data.import_price,
@@ -184,13 +185,19 @@ export const deletePrdInStock = async (id: any) => {
   return res.data;
 };
 
-export const updateOrderStatus = async (order_status: any, id: number) => {
+export const updateOrderStatus = async (
+  order_status: string,
+  products: { product_id: number; quantity: number }[],
+  id: number
+) => {
   const res = await apiClient.put("/updateStatusOrder", {
     order_status,
+    products,
     id,
   });
   return res.data;
 };
+
 
 export const getListStaffwarehouse = async () => {
   const res = await apiClient.get("/getListwarehouse");

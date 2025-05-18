@@ -77,3 +77,30 @@ export const exportExcelByTimeRange = (
   const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
   saveAs(blob, `bao_cao_don_hang_${label}.xlsx`);
 };
+
+export const handleExportExcell = (productsData: any[]) => {
+  const formattedData = productsData.map((item) => ({
+    Mã_Sản_Phẩm: item.id,
+    Tên_Sản_Phẩm: item.product_name,
+    Mô_Tả: item.description,
+    Ảnh: item.product_image,
+    Giá: Number(item.price),
+    Giảm_Giá: Number(item.discount),
+    Số_Lượng: item.stock_quantity,
+    Màu_Sắc: JSON.parse(item.color).join(", "),
+    Kích_Cỡ: JSON.parse(item.size).join(", "),
+    Danh_Mục: item.category_name,
+    Thương_Hiệu: item.brand,
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(formattedData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sản Phẩm");
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+  const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+  saveAs(data, "danh_sach_san_pham_can_nhap.xlsx");
+};

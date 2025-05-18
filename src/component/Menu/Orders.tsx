@@ -244,20 +244,36 @@ const Orders = () => {
   };
 
   const handleUpdateOrder = async () => {
-    try {
-      const res: any = await updateOrderStatus(
-        selectOrderStt,
-        dataSelectedOrder.id
-      );
-      if (res) {
-        toast.success("Cập nhật sản phẩm thành công");
-        setRefresh((prev) => !prev);
-        setOpenUpdateOrderStatus(false);
-      }
-    } catch (err: any) {
-      toast.error("Lỗi liên quan đến netWork");
+  try {
+    if (!dataSelectedOrder?.items) {
+      toast.error("Không có sản phẩm nào trong đơn hàng");
+      return;
     }
-  };
+
+    
+    const products = dataSelectedOrder.items.map((item: any) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+    }));
+
+   
+    const res: any = await updateOrderStatus(
+      selectOrderStt,
+      products,
+      dataSelectedOrder.id
+    );
+
+    if (res) {
+      toast.success("Cập nhật sản phẩm thành công");
+      setRefresh((prev) => !prev);
+      setOpenUpdateOrderStatus(false);
+    }
+  } catch (err) {
+    console.error("Lỗi:", err);
+    toast.error("Lỗi liên quan đến netWork");
+  }
+};
+
 
   useEffect(() => {
     const dataTable = async () => {

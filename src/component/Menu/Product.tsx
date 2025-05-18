@@ -35,6 +35,8 @@ import Swal from "sweetalert2";
 import { Box } from "@mui/system";
 import { colors, getStyles, MenuProps, sizes } from "./type";
 import { formatter } from "../../helps/Helps";
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
+import { handleExportExcell } from "./Function/Functions";
 
 const Product = () => {
   const theme = useTheme();
@@ -147,7 +149,7 @@ const Product = () => {
           image,
           description,
           productPrice,
-          "0",
+          quantity,
           discount,
           personName,
           size
@@ -310,6 +312,9 @@ const Product = () => {
   //   }
   // };
   // console.log('object', file)
+  const handleExport =()=>{
+    handleExportExcell(dataTable?.data)
+  }
 
   return (
     <div>
@@ -402,17 +407,17 @@ const Product = () => {
             size="small"
           />
         </div>
-        {/* <div className="col-2 mt-2">
+        <div className="col-2 mt-2">
           <TextField
             id="stock_quantity"
-            label="Số lượng"
+            label="Số lượng nhập"
             defaultValue=""
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             fullWidth
             size="small"
           />
-        </div> */}
+        </div>
         <div className="col-3 ">
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="color" size="small">
@@ -532,6 +537,16 @@ const Product = () => {
             onClick={handleClearAll}
           >
             Clear All
+          </Button>
+        </div>
+        <div className="col-2 mt-2">
+          <Button
+            fullWidth
+            variant="contained"
+            endIcon={<DriveFolderUploadIcon />}
+            onClick={handleExport}
+          >
+            Xuất Excell
           </Button>
         </div>
       </div>
